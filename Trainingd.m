@@ -1,0 +1,29 @@
+p=dataTraining';
+t=train_a_target';
+%[pn,ps] = mapminmax(p);
+%[tn,ts] = mapminmax(t);
+[pn2,ps1] = mapstd(p);
+%[pn1,ps2] = processpca(pn2,0.000003);
+%pn1=pn3(:,1:7352);
+net=newff(minmax(pn2),[40,40,40,6],{'logsig','logsig','logsig','purelin'},'trainlm');
+%net = init(net);
+%net.divideFcn='dividerand';
+% net.divideParam.valRatio=0.1;
+% net.divideParam.testRatio=0.1;
+net.trainParam.show = 10;
+net.trainParam.epochs = 10000;
+net.trainParam.goal = 0.001;
+net.trainParam.min_grad = 0.0000000000000001;
+% net.divideParam.trainRatio=0.8;
+%net.performFcn = 'mse'; 
+%net.performParam.ratio = 0.5; 
+%net.trainParam.lr = 0.1;
+ %net.trainParam.max_fail = 5000;
+[net] = train(net,pn2,t);
+an = sim(net,pn2);
+%a = mapminmax('reverse',an,t);
+
+%mse= sum((e).^2)/length(e);
+
+wts2=net.IW{1,1};
+bias2=net.b{1};
